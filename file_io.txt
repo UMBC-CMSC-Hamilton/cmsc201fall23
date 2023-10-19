@@ -1,0 +1,6 @@
+this is a new file
+we can enter random crap in here
+
+
+then we can read it with our program
+let's go do that

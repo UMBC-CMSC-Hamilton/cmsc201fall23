@@ -1,0 +1,22 @@
+fanta
+coke
+pineapple
+pears
+kiwi
+mango
+watermelon
+probably
+tomato
+steak
+chilli
+potato
+hamburger
+fish
+this is like a log file
+we'll see things as they update
+why don't we see this stuff?
+hi
+what do we want to add?
+more things!
+this is append mode
+shouldn't overwrite
