@@ -13,7 +13,7 @@ SPACE = ' '
 def draw_board(top_cups, bottom_cups, mancala_a, mancala_b):
     """
     draw_board is the function that you should call in order to draw the board.
-        top_cups and bottom_cups are lists of strings.  Each string should be length BLOCK_WIDTH and each list should be of length BLOCK_HEIGHT.
+        top_cups and bottom_cups are 2d lists of strings.  Each string should be length BLOCK_WIDTH and each list should be of length BLOCK_HEIGHT.
         mancala_a and mancala_b should be 2d lists of strings.  Each string should be BLOCK_WIDTH in length, and each list should be 2 * BLOCK_HEIGHT + 1
 
     :param top_cups: This should be a list of strings that represents cups 1 to 6 (Each list should be at least BLOCK_HEIGHT in length, since each string in the list is a line.)
@@ -99,3 +99,27 @@ def run_game():
 
 if __name__ == "__main__":
     run_game()
+    
+    top_cups = []
+    for i in range(6):
+        new_cup = ["Cup", str(i + 1), "Stones", "4", ""]
+        top_cups.append(new_cup)
+
+
+    bottom_cups = []
+    for i in range(6):
+        new_cup = ["Cup", str(13 - i), "stones", "4", ""]
+        bottom_cups.append(new_cup)
+    
+    left_mancala = []
+    for i in range(2 * BLOCK_HEIGHT + 1):
+        left_mancala.append(" " * BLOCK_WIDTH)
+    left_mancala[4] = "robert"
+    right_mancala = []
+    for i in range(2 * BLOCK_HEIGHT + 1):
+        right_mancala.append(" " * BLOCK_WIDTH)
+    right_mancala[4] = "sam   "
+
+    draw_board(top_cups, bottom_cups, left_mancala, right_mancala)
+
+
