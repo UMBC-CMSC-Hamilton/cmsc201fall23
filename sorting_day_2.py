@@ -7,6 +7,9 @@
         exchanges adjacent elements
 """
 
+import time
+import random
+
 
 def bubble_sort(the_list):
     is_sorted = False
@@ -155,20 +158,146 @@ def put_together(first_list, second_list):
     
     return result
 
-
+"""
+    [size 16]
+    [size 8] [size 8] ==> cost is 8 + 8
+    [size 4] [size 4] [size 4] [size 4] ==> cost here is 4 + 4 + 4 + 4
+    [size 2] [size 2][size 2][size 2][size 2][size 2][size 2][size 2] ==>
+            2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 = 16
+    [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1] [1]
+    1 + 1 + 1 ... + 1 = 16 = n
+    
+    57
+    [size 28] [size 29]
+    [size 14] [size 14][size 14] [size 15]
+    [size 7] [size 7] [size 7] [size 7] [size 7] [size 7] [size 7] [size 8]
+    [3] [4] [3] [4] [3] [4] [3] [4] [3] [4] [3] [4] [3] [4] [4] [4]
+    [2][1] [2][2] [2][1] [2][2] [2][1] [2][2] [2][1] [2][2] [2][1] [2][2] [2][1] [2][2] [2][1] ...
+    [1] .... x 57  = n
+    
+    ((n /2)/(2 / 1))/2 ... /2 ~= 1
+    n/4 /2 /2 /2 .../2
+    n/8... n/16  n/32 ...
+    
+    n/2^k = 1
+    n = 2^k
+    log_2(n) = k = #steps that it requires to get down to lists of size 1
+    round_up(log_2(n))
+    
+    Total cost to run merge sort is:
+    n * lg(n) = #steps ~ time
+    
+    lg(n) = log_2(n)
+    ln(x) = log_e(x)
+    log(x) = log_10(x)
+    
+    The costs of our previous sorts were about #steps ~ time = n^2
+    
+    we want our algorithm to run fewer steps if possible
+    
+    so now the question is which is less?
+    n lg(n) vs n^2 ???
+    
+    lim_{n to infinity} n lg(n) / n^2 = lim lg(n) / n = lim 1/n = 0
+"""
 
 def merge_sort(the_list):
-    if not the_list:
+    if len(the_list) <= 1:
         return the_list
-
+    # it breaks a list in half
     halfway = len(the_list) // 2
     first_half = the_list[0: halfway]
     second_half = the_list[halfway:]
+    # sorts both halves
     first_half = merge_sort(first_half)
     second_half = merge_sort(second_half)
+    # returns the merge/put_together of the sorted halves
     return put_together(first_half, second_half)
 
 
-print(put_together([3, 4, 8, 9], [1, 2, 5, 10, 20, 50]))
+
+"""
+    QuickSort
+    
+        relies on something called a pivot first element in the list
+        create two lists
+        less list = all the elements less than pivot
+        greater list = all elements greater than or equal to the pivot
+        
+        don't put the pivot in either list <-- important
+        
+        
+        [3, 5, 9, 2, 7, 1, 4] pivot = 3
+        QS[2, 1] + 3 + QS[5, 9, 7, 4]
+        [2, 1] pivot = 2
+        [1] + 2 + [] = [1, 2]
+        [5, 9, 7, 4] pivot = 5
+        QS[4] + 5 + QS[9, 7]
+        
+        QS[9, 7] pivot = 9
+        [] + 7 + [9] = [7, 9]
+        [4, 5, 7, 9]
+        
+        [1, 2, 3, 4, 5, 7, 9]
+        ======================== Example 2========================
+        QS[1, 2, 3, 4, 5] pivot = 1
+        [] + 1 + QS[2, 3, 4, 5]
+        QS[2, 3, 4, 5] pivot = 2
+        [] + 2 + QS[3, 4, 5]
+        QS[3, 4, 5] pivot = 3
+        [] + 3 + [4, 5]
+        QS[4, 5] pivot = 4
+        [] + 4 + [5] = [4, 5]
+        [1, 2, 3, 4, 5]
+        
+        problem: the list size only decreases by one each time
+        instead of the number of steps being logarithmic, it is like n.
+    
+"""
+def quicksort(the_list):
+    if len(the_list) <= 1:
+        return the_list
+    pivot = the_list[0]
+    less_list = []
+    equal_list = []
+    greater_list = []
+    # skipping element 0 because i'm not the the pivot in either list
+    for i in range(len(the_list)):
+        if the_list[i] < pivot:
+            less_list.append(the_list[i])
+        elif the_list[i] == pivot:
+            equal_list.append(the_list[i])
+        else:
+            greater_list.append(the_list[i])
+    less_list = quicksort(less_list)
+    greater_list = quicksort(greater_list)
+    return less_list + equal_list + greater_list
+    
 
 
+L = []
+# actually uses a modified merge sort + insertion sort
+L.sort()
+
+def time_test(size, the_sort):
+    new_list = [random.randint(0, 1000) for _ in range(size)]
+    start_time = time.process_time()
+    the_sort(new_list)
+    end_time = time.process_time()
+    print(f'The sort took {end_time - start_time} seconds')
+
+
+import sys
+
+
+sys.setrecursionlimit(100000)
+
+for size in [1000, 10000, 100000, 1000000]:
+    print('Running test on size', size)
+    time_test(size, merge_sort)
+    time_test(size, quicksort)
+
+start_time = time.process_time()
+sorted_list = [i for i in range(1000)]
+quicksort(sorted_list)
+print('Done', time.process_time() - start_time)
